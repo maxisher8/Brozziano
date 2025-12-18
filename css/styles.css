@@ -1,0 +1,18 @@
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+.container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+}
+.container img{
+    height: 70px;
+    width: auto;
+    margin-top: 20px;
+}
+
