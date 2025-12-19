@@ -29,3 +29,17 @@
     width: 20px;           
     border-radius: 50%;      
 }
+.localGroup{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.local{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+    height: 30px;
+    width: 800px;
+    background-color: aqua;
+}
