@@ -40,7 +40,7 @@ async function eliminarUsuario(nombreUsuario) {
             alert('Error al eliminar: ' + error.message);
         } else {
             alert('Usuario eliminado correctamente');
-            // Recargamos la lista automáticamente para que desaparezca de la pantalla
+            // Recargo la lista para que muestre el cambio
             usuarioAll(); 
         }
     }
