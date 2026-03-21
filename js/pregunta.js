@@ -2,6 +2,18 @@ async function preguntaAll() {
     const urlParams = new URLSearchParams(window.location.search);
     const localId = urlParams.get('localId') || 'default';
 
+    // Obtener nombre del local
+    if (localId !== 'default') {
+        const { data, error } = await supabaseclient
+            .from('local')
+            .select('nombre')
+            .eq('id', localId);
+
+        if (data && data[0]) {
+            document.getElementById('localName').textContent = data[0].nombre;
+        }
+    }
+
     const { data, error } = await supabaseclient
         .from('pregunta')
         .select('*');
@@ -76,4 +88,16 @@ document.getElementById('searchInput').addEventListener('input', () => {
     const query = document.getElementById('searchInput').value.toLowerCase();
     const filtered = window.preguntas.filter(pregunta => pregunta.texto_pregunta.toLowerCase().includes(query));
     renderPreguntas(filtered);
+});
+
+document.getElementById('deleteBtn').addEventListener('click', () => {
+    const confirmed = confirm('¿Estás seguro de que quieres eliminar el checklist de este local?');
+    if (confirmed) {
+        // Aquí irá la funcionalidad de eliminación
+        alert('Checklist eliminado (funcionalidad pendiente)');
+    }
+});
+
+document.getElementById('uploadBtn').addEventListener('click', () => {
+    alert('Checklist subido exitosamente (funcionalidad pendiente)');
 });

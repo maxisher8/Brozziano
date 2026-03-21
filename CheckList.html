@@ -20,12 +20,19 @@
             </div>
         </div>
     </header>
-    <div class="searchBar searchBar-with-back">
+    <div class="page-header">
         <button onclick="history.back();" class="back-button">←</button>
+        <h1 id="localName">CheckList</h1>
+    </div>
+    <div class="searchBar">
         <input type="text" placeholder="Buscar preguntas..." id="searchInput">
     </div>
    <div id="preguntaGroup">
     
    </div>
+   <footer class="footer">
+       <button id="uploadBtn">Subir CheckList</button>
+       <button id="deleteBtn">🗑️</button>
+   </footer>
 </body>
 </html>
