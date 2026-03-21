@@ -12,11 +12,16 @@ async function preguntaAll() {
         console.log('Conexión exitosa. Datos:', data);
     }
 
+    window.preguntas = data; // Guardar datos globalmente
+    renderPreguntas(data);
+}
+
+function renderPreguntas(preguntas) {
     // Mostrar los datos en el HTML
     const contenedor = document.getElementById('preguntaGroup');
     contenedor.innerHTML = '';
 
-    data.forEach(pregunta => {
+    preguntas.forEach(pregunta => {
         // Crear elementos con DOM
         const card = document.createElement('div');
         card.className = 'card-pregunta';
@@ -31,6 +36,8 @@ async function preguntaAll() {
         checkbox.id = `check-${pregunta.id}`;
         checkbox.style.marginRight = '10px';
         // Cargar estado desde localStorage con localId
+        const urlParams = new URLSearchParams(window.location.search);
+        const localId = urlParams.get('localId') || 'default';
         checkbox.checked = localStorage.getItem(`checkbox-${localId}-${pregunta.id}`) === 'true';
         // Guardar estado al cambiar
         checkbox.addEventListener('change', () => {
@@ -64,3 +71,9 @@ function irAInfoCat(id) {
 }
 
 preguntaAll();
+
+document.getElementById('searchInput').addEventListener('input', () => {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = window.preguntas.filter(pregunta => pregunta.texto_pregunta.toLowerCase().includes(query));
+    renderPreguntas(filtered);
+});

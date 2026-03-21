@@ -18,15 +18,16 @@ body {
     padding: 10px 5%;
     background-color: #800000; /* bordo */
     color: #ffffff; /* blanco */
+    position: relative;
 }
 
 .back-button {
+    margin: 10px 0 0 20px;
     background: none;
     border: none;
     font-size: 24px;
     color: #000000;
     cursor: pointer;
-    margin: 10px;
 }
 
 .container img {
@@ -45,13 +46,22 @@ body {
     border-bottom: 2px solid #800000; /* bordo */
 }
 
-.search button {
-    height: 30px;
-    width: 30px;
-    background-color: #800000; /* bordo */
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
+.searchBar input {
+    padding: 10px;
+    border: 2px solid #800000; /* bordo */
+    border-radius: 25px;
+    width: 300px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.searchBar input:focus {
+    border-color: #a00000; /* bordo más oscuro */
+}
+
+.searchBar-with-back {
+    position: relative;
 }
 
 .search {
