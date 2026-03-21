@@ -92,10 +92,29 @@ document.getElementById('searchInput').addEventListener('input', () => {
 
 document.getElementById('deleteBtn').addEventListener('click', () => {
     const confirmed = confirm('¿Estás seguro de que quieres eliminar el checklist de este local?');
-    if (confirmed) {
-        // Aquí irá la funcionalidad de eliminación
-        alert('Checklist eliminado (funcionalidad pendiente)');
+    if (!confirmed) return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const localId = urlParams.get('localId') || 'default';
+
+    // Limpiar estado de checkboxes almacenado en localStorage
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(`checkbox-${localId}-`)) {
+            keysToRemove.push(key);
+        }
     }
+
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+
+    // Desmarcar todas las casillas visibles
+    const checkboxElements = document.querySelectorAll('#preguntaGroup input[type="checkbox"]');
+    checkboxElements.forEach((checkbox) => {
+        checkbox.checked = false;
+    });
+
+    alert('Checklist eliminado. Todas las casillas se han desmarcado.');
 });
 
 document.getElementById('uploadBtn').addEventListener('click', () => {
