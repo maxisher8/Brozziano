@@ -18,14 +18,12 @@ async function localall() {
     data.forEach(local => {
         //diseño de las tarjetas con los datos obtenidos
         const card = `
-            <div class="card-local" style="border: 1px solid #ccc; margin: 10px; padding: 15px; border-radius: 8px;">
-                <a href="/CheckList.html">${local.nombre}</a>
-                <h3>${local.id}</h3>
-            </div>
-            <div class="card-button">
-                <button onclick="GetAllFromLocal(${local.id})" style="color: blue;">
-                    Ver detalles de ${local.nombre}
-                </button>
+            <div style="display: flex; align-items: center; margin: 10px;">
+                <div class="card-local" style="border: 1px solid #ccc; margin: 10px; padding: 15px; border-radius: 8px; flex: 1;">
+                    <a href="/CheckList.html?localId=${local.id}">${local.nombre}</a>
+                    <h3>${local.id}</h3>
+                </div>
+                <button onclick="window.location.href='/CheckList.html?localId=${local.id}';" style="margin-left: 10px; background: #800000; color: white; border: none; padding: 10px; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer;">+</button>
             </div>
         `;
         contenedor.innerHTML += card;
@@ -52,9 +50,12 @@ async function GetAllFromLocal(IdLocal) {
     data.forEach(local => {
         //diseño de las tarjetas con los datos obtenidos
         const card = `
-            <div class="card-local" style="border: 1px solid #ccc; margin: 10px; padding: 15px; border-radius: 8px;">
-                <a href="/CheckList.html">${local.nombre}</a>
-                <h3>${local.id}</h3>
+            <div style="display: flex; align-items: center; margin: 10px;">
+                <div class="card-local" style="border: 1px solid #ccc; margin: 10px; padding: 15px; border-radius: 8px; flex: 1;">
+                    <a href="/CheckList.html?localId=${local.id}">${local.nombre}</a>
+                    <h3>${local.id}</h3>
+                </div>
+                <button onclick="window.location.href='/CheckList.html?localId=${local.id}';" style="margin-left: 10px; background: #800000; color: white; border: none; padding: 10px; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer;">+</button>
             </div>
         `;
         contenedor.innerHTML += card;
