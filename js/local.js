@@ -27,7 +27,7 @@ async function loadAdminState() {
     if (isAdmin) {
         await localall(true);
     } else {
-        await localall(false, userId);
+        await localall(false, user.id);
     }
 }
 
@@ -78,18 +78,18 @@ function setupMenu(isAdmin) {
     const menuBtn = document.getElementById('menuBtn');
 
     if (isAdmin) {
-        adminMenu.classList.remove('hidden');
-        menuBtn.addEventListener('click', () => {
-            adminMenu.classList.toggle('hidden');
-        });
+        // adminMenu starts closed
+        const toggleMenu = () => {
+            adminMenu.classList.toggle('open');
+            document.body.classList.toggle('sidebar-open');
+        };
+        menuBtn.addEventListener('click', toggleMenu);
+        document.getElementById('closeMenu').addEventListener('click', toggleMenu);
         document.getElementById('manageUsers').addEventListener('click', () => {
-            alert('Funcionalidad de gestión de usuarios aún no implementada');
-        });
-        document.getElementById('managePermissions').addEventListener('click', () => {
-            alert('Funcionalidad de gestión de permisos aún no implementada');
+            window.location.href = '/UserManagement.html';
         });
     } else {
-        adminMenu.classList.add('hidden');
+        adminMenu.classList.remove('open');
         menuBtn.style.display = 'none';
     }
 

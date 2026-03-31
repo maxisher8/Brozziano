@@ -97,11 +97,11 @@ document.getElementById('deleteBtn').addEventListener('click', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const localId = urlParams.get('localId') || 'default';
 
-    // Limpiar estado de checkboxes almacenado en localStorage
+    // Limpiar estado de checkboxes y observaciones almacenado en localStorage
     const keysToRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith(`checkbox-${localId}-`)) {
+        if (key && (key.startsWith(`checkbox-${localId}-`) || key.startsWith(`observacion-${localId}-`))) {
             keysToRemove.push(key);
         }
     }

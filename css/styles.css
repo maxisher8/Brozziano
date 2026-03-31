@@ -99,6 +99,39 @@ body {
     align-items: center;
 }
 
+.save-btn {
+    background-color: #800000;
+    border: none;
+    color: #ffffff;
+    padding: 10px 20px; 
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.save-btn:hover {
+    background-color: #a00000;
+    transform: translateY(-1px);
+}
+
+.save-btn.primary {
+    width: 100%;
+    max-width: 300px;
+}
+
+.save-btn.square {
+    min-width: 120px;
+    height: 48px;
+    padding: 0 16px;
+    border-radius: 8px;
+}
+
+.save-btn.square:enabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .login-container, .signup-container {
     display: flex;
     flex-direction: column;
@@ -161,39 +194,130 @@ body {
 }
 
 .admin-menu {
-    position: absolute;
-    top: 70px;
-    right: 20px;
+    position: fixed;
+    top: 0;
+    right: -200px;
+    width: 200px;
+    height: 100%;
     background: #ffffff;
-    border: 1px solid #800000;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-    padding: 10px;
+    border-left: 1px solid #800000;
+    box-shadow: -2px 0 12px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    transition: right 0.3s ease;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
 }
 
-.admin-menu.hidden {
-    display: none;
+.admin-menu.open {
+    right: 0;
+}
+
+.admin-menu .close-btn {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #800000;
+    cursor: pointer;
+    margin-bottom: 10px;
 }
 
 .admin-menu ul {
     list-style: none;
     margin: 0;
     padding: 0;
+    flex: 1;
 }
 
 .admin-menu li {
-    margin-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+.admin-menu li.logout-item {
+    margin-top: auto;
+    margin-bottom: 0;
 }
 
 .admin-menu a {
     color: #800000;
     text-decoration: none;
     font-weight: bold;
+    font-size: 16px;
 }
 
 .admin-menu a:hover {
     text-decoration: underline;
+}
+
+body.sidebar-open .searchBar,
+body.sidebar-open #localGroup {
+    margin-right: 200px;
+    transition: margin-right 0.3s ease;
+}
+
+.searchBar,
+#localGroup {
+    transition: margin-right 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body.sidebar-open .searchBar,
+    body.sidebar-open #localGroup {
+        margin-right: 100%;
+    }
+
+    .admin-menu {
+        width: 100%;
+        right: -100%;
+    }
+
+    .container {
+        padding: 10px 10px;
+    }
+
+    .searchBar {
+        padding: 15px;
+    }
+
+    .searchBar input {
+        width: 250px;
+    }
+
+    .card-local {
+        padding: 10px;
+    }
+
+    .login-container, .signup-container {
+        padding: 15px;
+    }
+
+    .login-container form, .signup-container form {
+        width: 250px;
+    }
+
+    .info-content .textarea-row textarea {
+        rows: 8;
+    }
+}
+
+@media (max-width: 480px) {
+    .searchBar input {
+        width: 200px;
+    }
+
+    .login-container form, .signup-container form {
+        width: 200px;
+    }
+
+    .admin-menu {
+        padding: 15px;
+    }
+
+    .admin-menu a {
+        font-size: 14px;
+    }
 }
 
 #uploadBtn {

@@ -1,4 +1,4 @@
-/*async function toggleAdmin(userId, currentAdminValue) {
+async function toggleAdmin(userId, currentAdminValue) {
     const { data, error } = await supabaseclient
         .from('usuario')
         .update({ admin: !currentAdminValue })
@@ -22,8 +22,6 @@ async function loadUsuarios() {
         return;
     }
     const cont = document.getElementById('usuarioList');
-    if (!cont) return; // Si no existe el contenedor, no hacer nada
-    
     if (!data || data.length === 0) {
         cont.innerHTML = '<p>No hay usuarios registrados.</p>';
         return;
@@ -44,7 +42,4 @@ async function loadUsuarios() {
     }).join('');
 }
 
-// Auto-load si existe el contenedor de usuarioList
-if (document.getElementById('usuarioList')) {
-    loadUsuarios();
-}*/
+loadUsuarios();

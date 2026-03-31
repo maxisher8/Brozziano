@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CheckList</title>
+    <title>Gestionar Usuarios</title>
     <link rel="stylesheet" href="/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/js/config.js" defer></script>
-    <script src="/js/pregunta.js" defer></script>
+    <script src="/js/usermanagement.js" defer></script>
 </head>
 <body>
     <header>
@@ -17,19 +17,15 @@
             </div>
         </div>
     </header>
+
     <div class="page-header">
         <button onclick="window.location.href='/Index.html';" class="back-button">←</button>
-        <h1 id="localName">CheckList</h1>
+        <h1>Gestionar Usuarios</h1>
     </div>
-    <div class="searchBar">
-        <input type="text" placeholder="Buscar preguntas..." id="searchInput">
+
+    <div class="info-content">
+        <div id="usuarioList"></div>
     </div>
-   <div id="preguntaGroup">
-    
-   </div>
-   <footer class="footer">
-       <button id="uploadBtn">Subir CheckList</button>
-       <button id="deleteBtn">🗑️</button>
-   </footer>
+
 </body>
 </html>
