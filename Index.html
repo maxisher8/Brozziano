@@ -16,7 +16,14 @@
                 <img src="/imgs/logo.png" alt="Logo" onclick="window.location.href='/Index.html';">
             </div>
             <div class="menu">
-                <img src="/imgs/menu.webp" alt="menu">
+                <img src="/imgs/menu.webp" alt="menu" id="menuBtn" style="cursor:pointer;">
+                <div id="adminMenu" class="admin-menu hidden">
+                    <ul>
+                        <li><a href="#" id="manageUsers">Gestionar usuarios</a></li>
+                        <li><a href="#" id="managePermissions">Gestionar permisos</a></li>
+                        <li><a href="#" id="logoutBtn">Cerrar sesión</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </header>
@@ -26,5 +33,21 @@
     <div id="localGroup">
         
     </div>
+    <script>
+        async function checkUserAndRedirect() {
+            const { data: { session } } = await supabaseclient.auth.getSession();
+            if (!session) {
+                window.location.href = '/Login.html';
+                return;
+            }
+            const savedUserId = Number(localStorage.getItem('userId'));
+            if (!savedUserId) {
+                alert('No se encontró usuario conectado. Vuelve a iniciar sesión.');
+                window.location.href = '/Login.html';
+            }
+        }
+
+        checkUserAndRedirect();
+    </script>
 </body>
 </html>

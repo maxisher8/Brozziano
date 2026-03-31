@@ -1,17 +1,103 @@
 
-async function localall() {
-    const { data, error } = await supabaseclient
-        .from('local')
-        .select('*');
-
-    if (error) {
-        console.error('Error al conectar:', error.message);
-    } else {
-        console.log('Conexión exitosa. Datos:', data);
+async function loadAdminState() {
+    const { data: { session } } = await supabaseclient.auth.getSession();
+    if (!session || !session.user) {
+        window.location.href = '/Login.html';
+        return;
     }
 
-    window.locales = data; // Guardar datos globalmente
-    renderLocales(data);
+    const authUid = session.user.id;
+    const { data: user, error: userError } = await supabaseclient
+        .from('usuario')
+        .select('id, admin')
+        .eq('auth_uid', authUid)
+        .single();
+
+    if (userError || !user) {
+        console.error('No se pudo obtener usuario:', userError);
+        alert('No se pudo recuperar información del usuario. Inicia sesión de nuevo.');
+        localStorage.removeItem('userId');
+        window.location.href = '/Login.html';
+        return;
+    }
+
+    const isAdmin = user.admin === true;
+    setupMenu(isAdmin);
+
+    if (isAdmin) {
+        await localall(true);
+    } else {
+        await localall(false, userId);
+    }
+}
+
+async function localall(isAdmin = false, userId = null) {
+    let locales = [];
+
+    if (isAdmin) {
+        const { data, error } = await supabaseclient
+            .from('local')
+            .select('*');
+
+        if (error) {
+            console.error('Error al conectar:', error.message);
+        } else {
+            locales = data;
+        }
+    } else {
+        const { data: permisos, error: permisosError } = await supabaseclient
+            .from('permisos')
+            .select('id_local')
+            .eq('id_usuario', userId);
+
+        if (permisosError) {
+            console.error('Error obteniendo permisos:', permisosError.message);
+        } else {
+            const ids = permisos.map(p => p.id_local);
+            if (ids.length > 0) {
+                const { data, error } = await supabaseclient
+                    .from('local')
+                    .select('*')
+                    .in('id', ids);
+
+                if (error) {
+                    console.error('Error al cargar locales permitidos:', error.message);
+                } else {
+                    locales = data;
+                }
+            }
+        }
+    }
+
+    window.locales = locales;
+    renderLocales(locales);
+}
+
+function setupMenu(isAdmin) {
+    const adminMenu = document.getElementById('adminMenu');
+    const menuBtn = document.getElementById('menuBtn');
+
+    if (isAdmin) {
+        adminMenu.classList.remove('hidden');
+        menuBtn.addEventListener('click', () => {
+            adminMenu.classList.toggle('hidden');
+        });
+        document.getElementById('manageUsers').addEventListener('click', () => {
+            alert('Funcionalidad de gestión de usuarios aún no implementada');
+        });
+        document.getElementById('managePermissions').addEventListener('click', () => {
+            alert('Funcionalidad de gestión de permisos aún no implementada');
+        });
+    } else {
+        adminMenu.classList.add('hidden');
+        menuBtn.style.display = 'none';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        await supabaseclient.auth.signOut();
+        localStorage.removeItem('userId');
+        window.location.href = '/Login.html';
+    });
 }
 
 function renderLocales(locales) {
@@ -51,7 +137,7 @@ async function GetAllFromLocal(IdLocal) {
     renderLocales(data);
 }
 
-localall();
+loadAdminState();
 
 document.getElementById('searchInput').addEventListener('input', () => {
     const query = document.getElementById('searchInput').value.toLowerCase();

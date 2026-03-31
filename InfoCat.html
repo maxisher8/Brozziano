@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InfoCat</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/config.js" defer></script>
+    <script src="/js/info.js" defer></script>
 </head>
 <body>
     <header>
@@ -25,111 +28,16 @@
 
     <div class="info-content">
         <div class="info-row">
-            <div class="input-row">
-                <label for="puntaje">Puntaje (1-10)</label>
-                <input id="puntaje" type="number" min="1" max="10" step="1" placeholder="5">
-            </div>
             <div class="textarea-row">
                 <label for="observaciones">Observaciones</label>
-                <textarea id="observaciones" placeholder="Escribe observaciones del local..." rows="6"></textarea>
+                <textarea id="observaciones" placeholder="Escribe observaciones del local..." rows="10"></textarea>
             </div>
         </div>
     </div>
 
     <footer class="footer">
-        <button id="saveCatBtn" class="save-btn">+</button>
+        <button id="saveCatBtn" class="save-btn">Guardar</button>
     </footer>
 
-    <script>
-        async function cargaCategoria() {
-            const params = new URLSearchParams(window.location.search);
-            const preguntaId = params.get('id');
-            const localId = params.get('localId') || 'default';
-
-            if (!preguntaId) {
-                document.getElementById('preguntaTitle').textContent = 'Pregunta no especificada';
-                return;
-            }
-
-            const { data, error } = await supabaseclient
-                .from('pregunta')
-                .select('texto_pregunta')
-                .eq('id', preguntaId)
-                .single();
-
-            if (error) {
-                console.error('Error al cargar pregunta:', error);
-                document.getElementById('preguntaTitle').textContent = 'Error cargando pregunta';
-                return;
-            }
-
-            document.getElementById('preguntaTitle').textContent = data.texto_pregunta;
-            // Puedes guardar localId si necesitas usarlo al subir
-            document.body.dataset.localId = localId;
-        }
-
-        document.getElementById('saveCatBtn').addEventListener('click', async () => {
-            const puntaje = Number(document.getElementById('puntaje').value);
-            const observaciones = document.getElementById('observaciones').value.trim();
-            const params = new URLSearchParams(window.location.search);
-            const preguntaId = Number(params.get('id'));
-            const localId = Number(params.get('localId'));
-
-            if (!preguntaId || !localId) {
-                alert('Falta información de local o pregunta.');
-                return;
-            }
-
-            if (!puntaje || puntaje < 1 || puntaje > 10) {
-                alert('Ingresa un puntaje válido entre 1 y 10.');
-                return;
-            }
-
-            const revisionPayload = {
-                hora_entrada: Date.now() / 1000,
-                hora_salida: null,
-                fecha: new Date().toISOString(),
-                id_usuario: 1,
-                id_local: localId
-            };
-
-            const { data: revisionData, error: revisionError } = await supabaseclient
-                .from('revision')
-                .insert(revisionPayload)
-                .select('id')
-                .single();
-
-            if (revisionError || !revisionData) {
-                console.error('Error creando revision:', revisionError);
-                alert('No se pudo crear la revisión. Revisa consola.');
-                return;
-            }
-
-            const respuestaPayload = {
-                id_revision: revisionData.id,
-                id_pregunta: preguntaId,
-                observacion: observaciones,
-                enabled: puntaje >= 1,
-                fotos: ''
-            };
-
-            const { data: respuestaData, error: respuestaError } = await supabaseclient
-                .from('respuesta')
-                .insert(respuestaPayload)
-                .select('id')
-                .single();
-
-            if (respuestaError || !respuestaData) {
-                console.error('Error creando respuesta:', respuestaError);
-                alert('No se pudo guardar la respuesta. Revisa consola.');
-                return;
-            }
-
-            alert('Categoría guardada con éxito.\nRevision ID: ' + revisionData.id + '\nRespuesta ID: ' + respuestaData.id);
-            window.location.href = '/CheckList.html?localId=' + localId;
-        });
-
-        cargaCategoria();
-    </script>
 </body>
 </html>

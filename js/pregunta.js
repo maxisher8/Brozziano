@@ -117,6 +117,97 @@ document.getElementById('deleteBtn').addEventListener('click', () => {
     alert('Checklist eliminado. Todas las casillas se han desmarcado.');
 });
 
-document.getElementById('uploadBtn').addEventListener('click', () => {
-    alert('Checklist subido exitosamente (funcionalidad pendiente)');
+document.getElementById('uploadBtn').addEventListener('click', async () => {
+    const confirmed = confirm('¿Deseas subir el checklist actual a la base de datos?');
+    if (!confirmed) return;
+
+    const { data: { session } } = await supabaseclient.auth.getSession();
+    if (!session || !session.user) {
+        alert('Sesión expirada. Inicia sesión nuevamente.');
+        window.location.href = '/Login.html';
+        return;
+    }
+
+    const authUid = session.user.id;
+    const { data: userProfil, error: userError } = await supabaseclient
+        .from('usuario')
+        .select('id')
+        .eq('auth_uid', authUid)
+        .single();
+
+    if (userError || !userProfil) {
+        alert('No se encontró el perfil de usuario. Inicia sesión nuevamente.');
+        window.location.href = '/Login.html';
+        return;
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const localId = Number(urlParams.get('localId'));
+    if (!localId) {
+        alert('ID de local inválido.');
+        return;
+    }
+
+    const revisionPayload = {
+        hora_entrada: Date.now() / 1000,
+        hora_salida: null,
+        fecha: new Date().toISOString(),
+        id_usuario: userProfil.id,
+        id_local: localId
+    };
+
+    const { data: revisionData, error: revisionError } = await supabaseclient
+        .from('revision')
+        .insert(revisionPayload)
+        .select('id')
+        .single();
+
+    if (revisionError || !revisionData) {
+        console.error('Error creando revision:', revisionError);
+        alert('No se pudo crear la revisión. Revisa consola.');
+        return;
+    }
+
+    const respuestas = window.preguntas.map((pregunta) => {
+        const enabled = localStorage.getItem(`checkbox-${localId}-${pregunta.id}`) === 'true';
+        const observacion = localStorage.getItem(`observacion-${localId}-${pregunta.id}`) || '';
+        return {
+            id_revision: revisionData.id,
+            id_pregunta: pregunta.id,
+            observacion,
+            enabled,
+            fotos: ''
+        };
+    });
+
+    const { error: respuestaError } = await supabaseclient
+        .from('respuesta')
+        .insert(respuestas);
+
+    if (respuestaError) {
+        console.error('Error creando respuestas:', respuestaError);
+        alert('No se pudo subir el checklist. Revisa consola.');
+        return;
+    }
+
+    // Limpiar estado local
+    window.preguntas.forEach((pregunta) => {
+        localStorage.removeItem(`checkbox-${localId}-${pregunta.id}`);
+        localStorage.removeItem(`observacion-${localId}-${pregunta.id}`);
+    });
+
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(`checkbox-${localId}-`)) {
+            keysToRemove.push(key);
+        }
+        if (key && key.startsWith(`observacion-${localId}-`)) {
+            keysToRemove.push(key);
+        }
+    }
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+
+    alert('Checklist subido con éxito');
+    window.location.reload();
 });
