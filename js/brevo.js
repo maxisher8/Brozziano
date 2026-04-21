@@ -1,5 +1,5 @@
 async function sendBrevoMail(toEmail, subject, htmlContent, textContent) {
-  if (!BREVO_API_KEY || BREVO_API_KEY === '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') {
+  if (!BREVO_API_KEY || BREVO_API_KEY === 'REPLACE_WITH_BREVO_API_KEY') {
     throw new Error('Brevo API key is required in config.js');
   }
 
