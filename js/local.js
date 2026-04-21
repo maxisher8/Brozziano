@@ -88,6 +88,9 @@ function setupMenu(isAdmin) {
         document.getElementById('manageUsers').addEventListener('click', () => {
             window.location.href = '/UserManagement.html';
         });
+        document.getElementById('manageLocales').addEventListener('click', () => {
+            window.location.href = '/LocalesManagement.html';
+        });
     } else {
         adminMenu.classList.remove('open');
         menuBtn.style.display = 'none';

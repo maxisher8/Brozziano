@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de locales</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <main class="content">
+      <h1>Gestionar locales</h1>
+      <section class="card">
+        <h2>Agregar nuevo local</h2>
+        <form id="newLocaleForm" class="auth-form">
+          <input type="text" id="nombreLocal" placeholder="Nombre del local" required />
+          <input type="text" id="direccionLocal" placeholder="Dirección (opcional)" />
+          <button type="submit">Agregar local</button>
+        </form>
+        <p id="localeMessage" class="info-message"></p>
+      </section>
+
+      <section class="card">
+        <h2>Locales existentes</h2>
+        <div id="localesList"></div>
+      </section>
+
+      <p>
+        <a href="Index.html">Volver al inicio</a>
+      </p>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/localmanagement.js"></script>
+  </body>
+</html>

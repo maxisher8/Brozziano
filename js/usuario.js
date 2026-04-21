@@ -1,5 +1,5 @@
-/*async function toggleAdmin(userId, currentAdminValue) {
-    const { data, error } = await supabaseclient
+async function toggleAdmin(userId, currentAdminValue) {
+    const { error } = await supabaseclient
         .from('usuario')
         .update({ admin: !currentAdminValue })
         .eq('id', userId)
@@ -10,20 +10,22 @@
         return;
     }
 
-    loadUsuarios();
+    await loadUsuarios();
 }
 
 async function loadUsuarios() {
     const { data, error } = await supabaseclient
         .from('usuario')
         .select('*');
+
+    const cont = document.getElementById('usuarioList');
+    if (!cont) return;
+
     if (error) {
-        console.error('Error cargando usuarios:', error);
+        cont.innerHTML = `<p>Error cargando usuarios: ${error.message}</p>`;
         return;
     }
-    const cont = document.getElementById('usuarioList');
-    if (!cont) return; // Si no existe el contenedor, no hacer nada
-    
+
     if (!data || data.length === 0) {
         cont.innerHTML = '<p>No hay usuarios registrados.</p>';
         return;
@@ -33,18 +35,19 @@ async function loadUsuarios() {
         const status = u.admin ? 'Sí' : 'No';
         const buttonText = u.admin ? 'Desactivar admin' : 'Activar admin';
         return `
-            <div style='border:1px solid #ccc;padding:10px;margin:5px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;'>
+            <div class="usuario-card">
                 <div>
-                    <strong>${u.nombre}</strong> (ID: ${u.id})<br>
-                    admin: ${status}
+                    <strong>${u.nombre || 'Usuario'}</strong> (ID: ${u.id})<br>
+                    <span>admin: ${status}</span>
                 </div>
-                <button class='save-btn' onclick='toggleAdmin(${u.id}, ${u.admin})'>${buttonText}</button>
+                <button class="save-btn" onclick="toggleAdmin(${u.id}, ${u.admin})">${buttonText}</button>
             </div>
         `;
     }).join('');
 }
 
-// Auto-load si existe el contenedor de usuarioList
-if (document.getElementById('usuarioList')) {
-    loadUsuarios();
-}*/
+window.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('usuarioList')) {
+        loadUsuarios();
+    }
+});
